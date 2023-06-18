@@ -91,7 +91,9 @@ const Navbar = () => {
               </div>
               <div className='flex flex-col justify-start items-start'>
                 {notifications > 0 ? sessionUser.notifications.map(notification => (
-                  <Link href={notification.url}
+                  <Link
+                    href={notification.url}
+                    key={notification.id}
                     onClick={() => {
                       setShowNotifications(false);
                       readNotifications(notification.id);
