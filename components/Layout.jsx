@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
   return (
     <div>
       <Head>
-        <title>VeganApp</title>
+        <title>ThinkShare</title>
       </Head>
       <header>
         {session && <Navbar />}
