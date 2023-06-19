@@ -13,12 +13,11 @@ import { useStateContext } from '@/context/StateContext';
 const Post = ({users, post, nowDate}) => {
   const [likedByUser, setLikedByUser] = useState(false);
   const [likesNumber, setLikesNumber] = useState(post.likes ? post.likes.length : 0);
+  const [currentlyLiked, setCurrentlyLiked] = useState(false);
 
   const author = users.find(user => user._id === post.author);
 
   const { sessionUser } = useStateContext();
-
-  let currentlyLiked;
 
   useEffect(() => {
     const index = post.likes.indexOf(sessionUser._id);
@@ -26,10 +25,8 @@ const Post = ({users, post, nowDate}) => {
     console.log(post.likes)
     console.log(index)
     if(index !== -1) {
-      currentlyLiked = true;
+      setCurrentlyLiked(true);
       setLikedByUser(true);
-    } else {
-      currentlyLiked = false;
     }
   }, [sessionUser]);
 
@@ -59,6 +56,7 @@ const Post = ({users, post, nowDate}) => {
           <div className='flex justify-end pt-3'>
             <div id='likeBtn' title='Me gusta' className='w-fit h-8 px-2 bg-gray-800 hover:bg-red-400 hover:shadow-lg hover:shadow-red-500 rounded-xl hover:text-black duration-200 flex justify-evenly items-center select-none cursor-pointer mr-2 sm:mr-4'
               onClick={async (e) => {
+                e.target.style.pointerEvents = 'none';
                 if(likedByUser) {
                   setLikedByUser(false);
                   if (currentlyLiked) {
@@ -76,6 +74,7 @@ const Post = ({users, post, nowDate}) => {
                   }
                   await likePost(post._id, sessionUser._id, 'like');
                 }
+                e.target.style.pointerEvents = 'auto';
               }}>
               <span><FontAwesomeIcon icon={likedByUser ? faSolidHeart : faHeart} size='xl'/></span> <span className='font-semibold pl-2'>{likesNumber}</span>
             </div>
