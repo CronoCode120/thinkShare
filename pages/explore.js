@@ -109,7 +109,7 @@ const ExplorePage = ({ users, posts }) => {
               className='rounded-full min-h-full min-w-full object-cover'
             />
         </Link>
-        <div id='postContent' className='max-w-full max-h-[50vh] font-semibold px-8 my-[40px] flex justify-center items-center h-full overflow-y-scroll scrollbar-hidden text-ellipsis text-justify flex-wrap' onScroll={() => {
+        <div id='postContent' className='max-w-full max-h-[50vh] font-semibold px-8 my-[40px] flex justify-center items-center h-full overflow-y-auto scrollbar-hidden text-ellipsis text-justify flex-wrap' onScroll={() => {
           if(scrollTip) {
             const arrow = document.getElementById('scrollArrow');
             arrow.style.opacity = 0;
@@ -118,7 +118,7 @@ const ExplorePage = ({ users, posts }) => {
             }, 1000);
           }
         }}>
-          <p className='text-lg'><span className='text-2xl text-emerald-400 pr-1'>"</span>{curPost.content}<span className='text-2xl text-emerald-400 pl-1'>"</span></p>
+          <p className='text-md'><span className='text-2xl text-emerald-400 pr-1 w-full'>"</span>{curPost.content}<span className='text-2xl text-emerald-400 pl-1'>"</span></p>
         </div>
         {scrollTip && <div id='scrollArrow' className='absolute bottom-3 left-1/2 translate-x-[-50%]'>
           <FontAwesomeIcon icon={faCircleArrowDown} size='2xl' className='opacity-1 select-none animate-bounce transition-all duration-300'/>

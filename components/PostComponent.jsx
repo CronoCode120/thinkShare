@@ -18,15 +18,19 @@ const Post = ({users, post, nowDate}) => {
 
   const { sessionUser } = useStateContext();
 
+  let currentlyLiked;
+
   useEffect(() => {
     const index = post.likes.indexOf(sessionUser._id);
     console.log(sessionUser)
     console.log(post.likes)
     console.log(index)
     if(index !== -1) {
+      currentlyLiked = true;
       setLikedByUser(true);
       console.log('found')
     } else {
+      currentlyLiked = false;
       console.log('not found');
     }
   }, [sessionUser]);
@@ -59,18 +63,18 @@ const Post = ({users, post, nowDate}) => {
               onClick={async () => {
                 if(likedByUser) {
                   setLikedByUser(false);
-                  if (post.likes.length > 0) {
+                  if (currentlyLiked) {
                     setLikesNumber(post.likes.length - 1);
                   } else {
-                    setLikesNumber(0);
+                    setLikesNumber(post.likes.length);
                   }
                   await likePost(post._id, sessionUser._id, 'dislike');
                 } else {
                   setLikedByUser(true);
-                  if (post.likes.length >= 0) {
-                    setLikesNumber(post.likes.length + 1);
+                  if (currentlyLiked) {
+                    setLikesNumber(post.likes.length);
                   } else {
-                    setLikesNumber(1);
+                    setLikesNumber(post.likes.length + 1);
                   }
                   await likePost(post._id, sessionUser._id, 'like');
                 }
