@@ -402,20 +402,28 @@ const UserPage = ({ users, posts }) => {
               editMode?setEditMode(false):setEditMode(true);
             } else {
               if(follow) {
-                await followUser('unfollow');
                 setFollow(false);
-                setFollowers(prevVal => prevVal - 1);
+                if (curUser.followers.length > 0) {
+                  setFollowers(curUser.followers.length - 1);
+                } else {
+                  setFollowers(0);
+                }
+                await followUser('unfollow');
               } else {
-                await followUser('follow');
                 setFollow(true);
-                setFollowers(prevVal => prevVal + 1);
+                if (curUser.followers.length > 0) {
+                  setFollowers(curUser.followers.length + 1);
+                } else {
+                  setFollowers(1);
+                }
+                await followUser('follow');
               }
             }
           }}>
           {sessionUser._id === curUser._id ? (
             <p className='flex items-center' title='Editar perfil'><FontAwesomeIcon icon={editMode ? faUserCheck : faUserPen} size='2xl' className='text-gray-300 mr-2' /> <span className='text-md text-gray-300'>{editMode ?'Terminar cambios' : 'Editar perfil'}</span></p>
           ) : (
-            <span title={follow ? 'Dejar de seguir' : 'Seguir'}><FontAwesomeIcon icon={follow ? faUserXmark : faUserPlus} size='2xl' className='text-gray-900' /></span>
+            <p title={follow ? 'Dejar de seguir' : 'Seguir'}><FontAwesomeIcon icon={follow ? faUserXmark : faUserPlus} size='2xl'  className='text-gray-300 mr-2'/> <span className='text-md text-gray-300'>{follow ?'Dejar de seguir' : 'Seguir'}</span></p>
           )}
         </div></Link>
 

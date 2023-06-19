@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faEllipsisVertical, faCircleXmark, faFloppyDisk, faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faCommentDots, faHeart } from '@fortawesome/free-regular-svg-icons';
 import { useStateContext } from '@/context/StateContext';
+import { toast } from 'react-hot-toast';
 
 import blankPfp from '../../public/blankPfp.jpg';
 
@@ -39,7 +40,7 @@ export const getServerSideProps = async () => {
 };
 
 const PostPage = ({ users, posts }) => {
-  const { sessionUser, setSessionUser, commentEdition, setCommentEdition, editedCommentId, setEditedCommentId, showDeleteMessage, setShowDeleteMessage, refreshData, router, session } = useStateContext();
+  const { sessionUser, commentEdition, setCommentEdition, editedCommentId, setEditedCommentId, showDeleteMessage, setShowDeleteMessage, refreshData, router, session } = useStateContext();
   const postId = router.query._id;
   const curPost = posts.find(post => post._id === postId);
   const author = users.find(user => user._id === curPost.author);
@@ -82,7 +83,8 @@ const PostPage = ({ users, posts }) => {
 
   const postComment = async () => {
     const curDate = new Date();
-    const res = await fetch('/api/test/update/updatePostComments', {
+    toast.loading('Enviando...');
+    fetch('/api/test/update/updatePostComments', {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -100,11 +102,15 @@ const PostPage = ({ users, posts }) => {
         },
         id: curPost._id
       })
-    });
-    const data = await res.json();
-    console.log(data);
-    setCommentInputValue('');
-    refreshData();
+    })
+    .then((response) => {
+      toast.dismiss();
+      response.json().then(data => console.log(data));
+      setCommentInputValue('');
+    })
+    .then(() => {
+      refreshData();
+    })
   }
 
   const saveComment = async () => {

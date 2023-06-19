@@ -12,7 +12,7 @@ import { useStateContext } from '@/context/StateContext';
 
 const Post = ({users, post, nowDate}) => {
   const [likedByUser, setLikedByUser] = useState(false);
-  const [likesNumber, setLikesNumber] = useState(post.likes.length);
+  const [likesNumber, setLikesNumber] = useState(post.likes ? post.likes.length : 0);
 
   const author = users.find(user => user._id === post.author);
 
@@ -58,13 +58,21 @@ const Post = ({users, post, nowDate}) => {
             <div title='Me gusta' className='w-fit h-8 px-2 bg-gray-800 hover:bg-red-400 hover:shadow-lg hover:shadow-red-500 rounded-xl hover:text-black duration-200 flex justify-evenly items-center select-none cursor-pointer mr-2 sm:mr-4'
               onClick={async () => {
                 if(likedByUser) {
-                  await likePost(post._id, sessionUser._id, 'dislike');
                   setLikedByUser(false);
-                  setLikesNumber(prevVal => prevVal - 1);
+                  if (post.likes.length > 0) {
+                    setLikesNumber(post.likes.length - 1);
+                  } else {
+                    setLikesNumber(0);
+                  }
+                  await likePost(post._id, sessionUser._id, 'dislike');
                 } else {
-                  await likePost(post._id, sessionUser._id, 'like');
                   setLikedByUser(true);
-                  setLikesNumber(prevVal => prevVal + 1);
+                  if (post.likes.length >= 0) {
+                    setLikesNumber(post.likes.length + 1);
+                  } else {
+                    setLikesNumber(1);
+                  }
+                  await likePost(post._id, sessionUser._id, 'like');
                 }
               }}>
               <span><FontAwesomeIcon icon={likedByUser ? faSolidHeart : faHeart} size='xl'/></span> <span className='font-semibold pl-2'>{likesNumber}</span>
