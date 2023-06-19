@@ -48,6 +48,7 @@ const PostPage = ({ users, posts }) => {
 
   const [likedByUser, setLikedByUser] = useState(false);
   const [likesNum, setLikesNum] = useState(curPost.likes.length);
+  const [currentlyLiked, setCurrentlyLiked] = useState(false);
 
   useEffect(() => {
     const index = curPost.likes.indexOf(sessionUser._id);
@@ -56,9 +57,7 @@ const PostPage = ({ users, posts }) => {
     console.log(index)
     if(index !== -1) {
       setLikedByUser(true);
-      console.log('found')
-    } else {
-      console.log('not found');
+      setCurrentlyLiked(true);
     }
   }, [sessionUser])
 
@@ -201,16 +200,26 @@ const PostPage = ({ users, posts }) => {
             )}
           <div className='w-full flex justify-between items-center'>
             <span title={`${likesNum} Me gusta`} className='w-fit h-8 px-2 bg-gray-800 hover:bg-red-400 hover:shadow-lg hover:shadow-red-500 rounded-xl hover:text-black duration-200 flex justify-evenly items-center select-none cursor-pointer mr-4'><FontAwesomeIcon icon={likedByUser ? faSolidHeart : faHeart} size='lg'/> <span className='font-semibold text-lg pl-2'
-              onClick={async () => {
+              onClick={async (e) => {
+                e.target.style.pointerEvents = 'none';
                 if(likedByUser) {
-                  await likePost(curPost._id, sessionUser._id, 'dislike');
                   setLikedByUser(false);
-                  setLikesNum(prevVal => prevVal - 1);
+                  if (currentlyLiked) {
+                    setLikesNum(curPost.likes.length - 1);
+                  } else {
+                    setLikesNum(curPost.likes.length);
+                  }
+                  await likePost(curPost._id, sessionUser._id, 'dislike');
                 } else {
-                  await likePost(curPost._id, sessionUser._id, 'like');
                   setLikedByUser(true);
-                  setLikesNum(prevVal => prevVal + 1);
+                  if (currentlyLiked) {
+                    setLikesNum(curPost.likes.length);
+                  } else {
+                    setLikesNum(curPost.likes.length + 1);
+                  }
+                  await likePost(curPost._id, sessionUser._id, 'like');
                 }
+                e.target.style.pointerEvents = 'auto';
               }}
             >{likesNum}</span></span>
             <span title={`${curPost.comments.length} comentarios`} className='text-gray-300'><FontAwesomeIcon icon={faCommentDots} size='lg' /> {curPost.comments.length}</span>

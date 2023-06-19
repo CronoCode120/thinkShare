@@ -37,7 +37,7 @@ const Comment = ({com, nowDate, curPost, users }) => {
           <div>
             <FontAwesomeIcon className='text-white cursor-pointer lg:text-transparent lg:group-hover:text-white' icon={faEllipsisVertical} onClick={() => showCommentOpt?setShowCommentOpt(false):setShowCommentOpt(true)}/>
             {showCommentOpt &&
-            <div className='absolute max-sm:right-2 bg-gray-950 rounded-xl lg:group-hover:block lg:hidden' onClick={() => {if(showCommentOpt) setShowCommentOpt(false)}}>
+            <div className='absolute max-sm:right-2 lg:right-[25%] bg-gray-950 rounded-xl lg:group-hover:block lg:hidden' onClick={() => {if(showCommentOpt) setShowCommentOpt(false)}}>
               <p className='border rounded-t-xl px-2 py-1 text-sm bg-black hover:bg-gray-800 cursor-pointer select-none' onClick={() => {
                 if(!commentEdition) {
                   setCommentEdition(true);
