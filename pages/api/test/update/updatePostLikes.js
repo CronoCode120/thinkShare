@@ -15,17 +15,22 @@ export default async function updatePostLikes(req, res) {
         console.log(req.body.userId);
 
         if(req.body.action === 'like') {
-            post.likes.push(req.body.userId);
+            const checkLike = post.likes.find(userId => userId === req.body.userId);
+            if(!checkLike) {
+                post.likes.push(req.body.userId);
+                const postAuthor = await User.findById(post.author);
 
-            const postAuthor = await User.findById(post.author);
-            const notif = {
-                message: "A alguien le ha gustado tu publicación",
-                url: `/post/${post._id}`,
-                id: uuidv4()
-            };
-            postAuthor.notifications.unshift(notif);
-            postAuthor.markModified('notifications');
-            await postAuthor.save();
+                const notif = {
+                    message: "A alguien le ha gustado tu publicación",
+                    url: `/post/${post._id}`,
+                    id: uuidv4()
+                };
+
+                postAuthor.notifications.unshift(notif);
+                postAuthor.markModified('notifications');
+                await postAuthor.save();
+            }
+            
         } else {
             const index = post.likes.indexOf(req.body.userId);
             post.likes.splice(index, 1);

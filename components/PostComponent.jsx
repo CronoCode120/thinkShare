@@ -28,10 +28,8 @@ const Post = ({users, post, nowDate}) => {
     if(index !== -1) {
       currentlyLiked = true;
       setLikedByUser(true);
-      console.log('found')
     } else {
       currentlyLiked = false;
-      console.log('not found');
     }
   }, [sessionUser]);
 
@@ -59,8 +57,9 @@ const Post = ({users, post, nowDate}) => {
         <div className='w-full flex justify-between items-center'>
           <Link href={`/post/${post._id}`}><p className='flex items-center pt-4 text-emerald-200 group max-sm:text-sm'>Ver publicación <FontAwesomeIcon icon={faChevronRight} size='sm' className='pt-1 pl-2 group-hover:translate-x-[15px] transition-all duration-200'/></p></Link>
           <div className='flex justify-end pt-3'>
-            <div title='Me gusta' className='w-fit h-8 px-2 bg-gray-800 hover:bg-red-400 hover:shadow-lg hover:shadow-red-500 rounded-xl hover:text-black duration-200 flex justify-evenly items-center select-none cursor-pointer mr-2 sm:mr-4'
-              onClick={async () => {
+            <div id='likeBtn' title='Me gusta' className='w-fit h-8 px-2 bg-gray-800 hover:bg-red-400 hover:shadow-lg hover:shadow-red-500 rounded-xl hover:text-black duration-200 flex justify-evenly items-center select-none cursor-pointer mr-2 sm:mr-4'
+              onClick={async (e) => {
+                e.target.style.pointerEvents = 'none';
                 if(likedByUser) {
                   setLikedByUser(false);
                   if (currentlyLiked) {
@@ -78,6 +77,7 @@ const Post = ({users, post, nowDate}) => {
                   }
                   await likePost(post._id, sessionUser._id, 'like');
                 }
+                e.target.style.pointerEvents = 'auto';
               }}>
               <span><FontAwesomeIcon icon={likedByUser ? faSolidHeart : faHeart} size='xl'/></span> <span className='font-semibold pl-2'>{likesNumber}</span>
             </div>
